@@ -1,81 +1,47 @@
 #include <iostream>
-#include <stdlib.h>
 using namespace std;
+const double PI = 3.1415;
 
-class Matrix
+class shape
 {
 public:
-	int row, col;
-	int* m;
-	Matrix()
-	{
-		row = 1;
-		col = 1;
-	}
-	Matrix(int a, int b)
-	{
-		int number;
-		row = a;
-		col = b;
-		m = new int[row * col];
-		for (int i = 0; i < row; i++)
-		{
-			for (int j = 0; j < col; j++)
-			{	
-				cin >> number;
-				*(m + i * col + j) = number;
-			}
-		}
-	}
-	void disp();
-	Matrix operator + (const Matrix &c);
+	virtual double volume()const = 0;
 };
 
-void Matrix::disp()
+class cylinder :public shape
 {
-	for (int i = 0; i < row; i++)
+private:
+	double r;
+	double h;
+public:
+	cylinder(double a, double b) :r(a), h(b) {}
+	double volume()const
 	{
-		cout << '\t';
-		for (int j = 0; j < col; j++)
-			cout << *(m + i * col + j) << '\t';
-		cout << endl;
+		return PI * r * r * h;
 	}
-}
+};
 
-Matrix Matrix::operator + (const Matrix &c)
+class sphere :public shape
 {
-	if (row == c.row && col == c.col)
+private:
+	double r;
+public:
+	sphere(double a) :r(a) {}
+	double volume()const
 	{
-		Matrix temp;
-		temp.row = c.row;
-		temp.col = c.col;
-		temp.m = new int[row * col];
-		for (int i = 0; i < row; i++)
-		{
-			for (int j = 0; j < col; j++)
-			{
-				*(temp.m + i * col + j) = *(m + i * col + j) + *(c.m + i * col + j);
-			}
-		}
-		return temp;
+		return PI * r * r * r * 4 / 3;
 	}
-	else
-	{
-		cout << " program terminated! ";
-	}
-}
+};
 
-int main()
-{
-	int row_a, col_a, row_b, col_b;
-	cin >> row_a >> col_a;
-	Matrix A(row_a, col_a);
-	cin >> row_b >> col_b;
-	Matrix B(row_b, col_b), C;
-
-	C = A + B;
-	C.disp();
-	A = B;
-	A.disp();
+int main() {
+	shape* p;
+	double  r, h;
+	cin >> r >> h;
+	cylinder cy(r, h);
+	sphere sp(r);
+	p = &cy;
+	cout << p->volume() << endl;
+	p = &sp;
+	cout << p->volume() << endl;
 	return 0;
 }
